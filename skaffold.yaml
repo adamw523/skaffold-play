@@ -1,0 +1,26 @@
+apiVersion: skaffold/v1beta16
+kind: Config
+metadata:
+  name: skaffold-play
+build:
+  tagPolicy:
+    gitCommit: {}
+  artifacts:
+    - image: web
+      context: .
+      sync:
+        manual:
+          - src: 'app/**/*'
+            dest: /app
+            strip: "app/"
+deploy:
+  kubectl:
+    manifests:
+      - k8s-*
+
+portForward:
+- resourceType: service
+  resourceName: web-service
+  namespace: skaffold-play
+  port: 8000
+  localPort: 8000
